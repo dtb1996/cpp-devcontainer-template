@@ -54,6 +54,10 @@ target_link_libraries(cpp_tests PRIVATE
     GTest::gtest_main
 )
 
+target_include_directories(cpp_tests PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 target_compile_options(cpp_tests PRIVATE
     -Wall
     -Wextra
