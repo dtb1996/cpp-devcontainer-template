@@ -21,11 +21,15 @@ target_include_directories(cpp_dev_environment PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_compile_options(cpp_dev_environment PRIVATE
-    -Wall
-    -Wextra
-    -Wpedantic
-)
+if(MSVC)
+    # MSVC-specific flags
+    set(COMPILE_FLAGS /W4)
+else()
+    # GCC/Clang flags
+    set(COMPILE_FLAGS -Wall -Wextra -Wpedantic)
+endif()
+
+target_compile_options(cpp_dev_environment PRIVATE ${COMPILE_FLAGS})
 
 # -----------------------------------------------------------------------------
 # Testing
@@ -58,11 +62,7 @@ target_include_directories(cpp_tests PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_compile_options(cpp_tests PRIVATE
-    -Wall
-    -Wextra
-    -Wpedantic
-)
+target_compile_options(cpp_tests PRIVATE ${COMPILE_FLAGS})
 
 include(GoogleTest)
 
