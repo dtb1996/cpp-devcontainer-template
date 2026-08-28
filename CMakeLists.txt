@@ -17,6 +17,10 @@ add_executable(cpp_dev_environment
     src/main.cpp
 )
 
+target_include_directories(cpp_dev_environment PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 target_compile_options(cpp_dev_environment PRIVATE
     -Wall
     -Wextra
