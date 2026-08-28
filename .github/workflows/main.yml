@@ -1,0 +1,55 @@
+name: Multi-OS C++ CMake CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.os }} Build
+    # This runs the job across multiple OS configurations simultaneously
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false # Prevents one OS failure from canceling the others
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    # 1. Check out the repository code
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Install CMake and Ninja (Only required on Linux runner)
+    - name: Install Build Dependencies (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake ninja-build
+
+    # 3. Install Ninja (Only required on macOS; CMake is pre-installed)
+    - name: Install Build Dependencies (macOS)
+      if: matrix.os == 'macos-latest'
+      run: brew install ninja
+
+    # 4. Configure CMake 
+    # (Windows pre-installs CMake/MSVC, but we use Ninja for Linux/macOS)
+    - name: Configure CMake
+      shell: bash
+      run: |
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+        else
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+        fi
+
+    # 5. Compile the project
+    - name: Build Project
+      run: cmake --build build --config Release
+
+    # 6. Run CTest
+    - name: Run Tests
+      working-directory: build
+      run: ctest --output-on-failure -C Release
