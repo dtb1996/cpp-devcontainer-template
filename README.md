@@ -2,7 +2,7 @@
 
 A reusable C++ development environment built around **VS Code Dev Containers**, **Ubuntu 24.04**, **CMake**, **Ninja**, and the **Clang tooling suite**.
 
-The project is designed for C++ practice and development with a focus on a clean, reproducible development environment and integrated testing.
+The project is designed for C++ practice and development with a focus on a clean, reproducible development environment, integrated testing, and automated cross-platform validation.
 
 ## Development Environment
 
@@ -37,6 +37,9 @@ The container uses a non-root `dillon` user with UID/GID `1000`, matching the de
 ├── .devcontainer/
 │   ├── Dockerfile
 │   └── devcontainer.json
+├── .github/
+│   └── workflows/
+│       └── main.yml
 ├── .vscode/
 │   └── settings.json
 ├── include/
@@ -117,6 +120,48 @@ ctest --preset debug
 ```
 
 When adding new tests, place them in the `tests/` directory and register them through CMake.
+
+## Continuous Integration
+
+The project uses **GitHub Actions** to automatically build and test the project across multiple operating systems.
+
+The CI workflow runs on:
+
+* Ubuntu
+* Windows
+* macOS
+
+Each platform:
+
+1. Checks out the repository.
+2. Configures the project with CMake.
+3. Builds the Release configuration.
+4. Runs the CTest test suite.
+
+The workflow uses Ninja on Linux and macOS. Windows uses the CMake generator provided by the GitHub Actions runner.
+
+### When CI Runs
+
+CI runs for:
+
+* Pushes to `main`
+* Pull requests targeting `main`
+
+The workflow uses path filtering to avoid running the full multi-platform build when unrelated files are changed.
+
+C++ CI is triggered when changes affect:
+
+```text
+CMakeLists.txt
+src/**
+tests/**
+cmake/**
+.github/workflows/**
+```
+
+For example, changes to `README.md`, `LICENSE`, or `.gitignore` do not require a C++ build and will not run the build/test steps.
+
+The `build-and-test` check remains a required pull request check. When no C++-related files have changed, the check completes successfully without performing the build.
 
 ## Clang Workflow
 
@@ -203,7 +248,7 @@ For normal development, most work should happen directly through VS Code.
 
 2. Edit C++ source files.
 
-3. Save - clang-format runs automatically.
+3. Save — clang-format runs automatically.
 
 4. Fix clangd/clang-tidy diagnostics as appropriate.
 
@@ -218,6 +263,8 @@ For normal development, most work should happen directly through VS Code.
    ```bash
    ctest --preset debug
    ```
+
+7. Commit and push changes. GitHub Actions will automatically build and test C++-related changes across Ubuntu, Windows, and macOS.
 
 For a clean rebuild:
 
@@ -242,3 +289,6 @@ The development environment currently provides:
 * GDB/LLDB debugging
 * CTest-based testing
 * VS Code integration
+* GitHub Actions CI
+* Multi-platform build and test validation
+* Path-filtered CI execution
