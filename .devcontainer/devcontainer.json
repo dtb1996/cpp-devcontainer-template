@@ -1,0 +1,26 @@
+{
+    "name": "C++ Development",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "USERNAME": "dillon",
+            "USER_UID": "1000",
+            "USER_GID": "1000"
+        }
+    },
+    "remoteUser": "dillon",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "llvm-vs-code-extensions.vscode-clangd",
+                "ms-vscode.cmake-tools"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+    "remoteEnv": {
+        "SHELL": "/bin/bash"
+    }
+}

@@ -1,0 +1,18 @@
+# CMake build directories
+build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+compile_commands.json
+
+# Ninja
+.ninja_deps
+.ninja_log
+
+# OS/editor files
+.DS_Store
+Thumbs.db
