@@ -15,6 +15,8 @@ FormatStyle: file
 
 CheckOptions:
   readability-identifier-naming.VariableCase: lower_case
+  readability-identifier-naming.LocalVariableCase: lower_case
+  readability-identifier-naming.LocalConstantCase: lower_case
   readability-identifier-naming.FunctionCase: CamelCase
   readability-identifier-naming.ClassCase: CamelCase
   readability-identifier-naming.StructCase: CamelCase
